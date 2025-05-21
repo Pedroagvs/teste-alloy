@@ -2,6 +2,7 @@
 
 import 'package:mobx/mobx.dart';
 import 'package:teste_flutter/features/customers/entities/customer.entity.dart';
+import 'package:teste_flutter/features/customers/stores/customers.store.dart';
 import 'package:teste_flutter/features/tables/entities/table.entity.dart';
 import 'package:teste_flutter/utils/extension_methos/extension_methods.dart';
 
@@ -10,6 +11,9 @@ part 'tables.store.g.dart';
 class TablesStore = _TablesStoreBase with _$TablesStore;
 
 abstract class _TablesStoreBase with Store {
+  final CustomersStore _customerStore;
+  _TablesStoreBase(this._customerStore);
+
   @observable
   ObservableList<TableEntity> tables = ObservableList<TableEntity>();
 
@@ -25,6 +29,22 @@ abstract class _TablesStoreBase with Store {
 
   @observable
   int? indexCustomerSelected;
+
+  @computed
+  ObservableList<CustomerEntity> get availablesCustomers {
+    final allocatedCustomers = tables
+        .expand((t) => t.customers)
+        .toList()
+        .where((c) => c.id != 0)
+        .toList();
+    final availablesCustomers = _customerStore.customers
+        .where((c) => !allocatedCustomers.contains(c))
+        .toList();
+    final customers = availablesCustomers
+        .where((c) => !currentTable.customers.contains(c))
+        .toList();
+    return ObservableList<CustomerEntity>.of(customers);
+  }
 
   @computed
   ObservableList<TableEntity> get filteredTables {

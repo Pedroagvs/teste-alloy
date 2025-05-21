@@ -100,7 +100,7 @@ class _CustomerSelectorState extends State<CustomerSelector> {
                       FocusScope.of(context).unfocus();
                     },
                   ),
-                  ...customersStore.filteredCustomers.map((customer) {
+                  ...tableStore.availablesCustomers.map((customer) {
                     return ListTile(
                       leading: SvgPicture.asset(AppIcons.user),
                       title: Text(customer.name),

@@ -9,7 +9,7 @@ final sl = GetIt.I;
 
 void slStores() {
   sl.registerLazySingleton<CustomersStore>(() => CustomersStore());
-  sl.registerLazySingleton<TablesStore>(() => TablesStore());
+  sl.registerLazySingleton<TablesStore>(() => TablesStore(sl.get()));
 }
 
 void init() {
